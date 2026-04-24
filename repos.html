@@ -54,15 +54,17 @@
             ? `<span>&#9733; ${r.stargazers_count}</span>`
             : '';
           return `
-            <a class="repo-card" href="${r.html_url}" target="_blank" rel="noopener">
-              <div class="repo-name">${r.name}</div>
+            <div class="repo-card">
+              <div class="repo-name">
+                <a href="${r.html_url}" target="_blank" rel="noopener">${r.name}</a>
+              </div>
               ${r.description ? `<div class="repo-desc">${r.description}</div>` : ''}
-              ${r.homepage ? `<div class="repo-url">&#127760; <a href="${r.homepage}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${r.homepage.replace(/^https?:\/\//, '')}</a></div>` : ''}
+              ${r.homepage ? `<div class="repo-url">&#127760; <a href="${r.homepage}" target="_blank" rel="noopener">${r.homepage.replace(/^https?:\/\//, '')}</a></div>` : ''}
               <div class="repo-meta">
                 ${lang}${stars}
                 <span>Updated ${updatedAgo}</span>
               </div>
-            </a>`;
+            </div>`;
         }).join('');
       } catch (err) {
         container.innerHTML = `<p class="error-msg">Could not load repos: ${err.message}</p>`;
