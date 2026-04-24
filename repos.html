@@ -57,6 +57,7 @@
             <a class="repo-card" href="${r.html_url}" target="_blank" rel="noopener">
               <div class="repo-name">${r.name}</div>
               ${r.description ? `<div class="repo-desc">${r.description}</div>` : ''}
+              ${r.homepage ? `<div class="repo-url">&#127760; <a href="${r.homepage}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${r.homepage.replace(/^https?:\/\//, '')}</a></div>` : ''}
               <div class="repo-meta">
                 ${lang}${stars}
                 <span>Updated ${updatedAgo}</span>
