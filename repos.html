@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Repos — Elliott</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav>
+    <div class="inner">
+      <a href="index.html" class="brand">elliott30</a>
+      <a href="index.html">Profile</a>
+      <a href="repos.html" class="active">Repos</a>
+    </div>
+  </nav>
+
+  <main>
+    <h1 class="page-title">Public Repos</h1>
+    <p class="page-subtitle">Projects from <a href="https://github.com/elliott30" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">github.com/elliott30</a></p>
+
+    <div id="repo-list" class="repo-grid">
+      <p class="loading">Loading repos…</p>
+    </div>
+  </main>
+
+  <script>
+    async function loadRepos() {
+      const container = document.getElementById('repo-list');
+      try {
+        const res = await fetch(
+          'https://api.github.com/users/elliott30/repos?sort=updated&per_page=100',
+          { headers: { Accept: 'application/vnd.github+json' } }
+        );
+        if (!res.ok) throw new Error(`GitHub API returned ${res.status}`);
+        const repos = await res.json();
+
+        // Filter out forks, sort by updated
+        const own = repos
+          .filter(r => !r.fork)
+          .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+
+        if (own.length === 0) {
+          container.innerHTML = '<p class="loading">No public repos yet.</p>';
+          return;
+        }
+
+        container.innerHTML = own.map(r => {
+          const updatedAgo = timeAgo(new Date(r.updated_at));
+          const lang = r.language
+            ? `<span>&#9679; ${r.language}</span>`
+            : '';
+          const stars = r.stargazers_count > 0
+            ? `<span>&#9733; ${r.stargazers_count}</span>`
+            : '';
+          return `
+            <a class="repo-card" href="${r.html_url}" target="_blank" rel="noopener">
+              <div class="repo-name">${r.name}</div>
+              ${r.description ? `<div class="repo-desc">${r.description}</div>` : ''}
+              <div class="repo-meta">
+                ${lang}${stars}
+                <span>Updated ${updatedAgo}</span>
+              </div>
+            </a>`;
+        }).join('');
+      } catch (err) {
+        container.innerHTML = `<p class="error-msg">Could not load repos: ${err.message}</p>`;
+      }
+    }
+
+    function timeAgo(date) {
+      const s = Math.floor((Date.now() - date) / 1000);
+      if (s < 60) return 'just now';
+      const m = Math.floor(s / 60);
+      if (m < 60) return `${m}m ago`;
+      const h = Math.floor(m / 60);
+      if (h < 24) return `${h}h ago`;
+      const d = Math.floor(h / 24);
+      if (d < 30) return `${d}d ago`;
+      const mo = Math.floor(d / 30);
+      if (mo < 12) return `${mo}mo ago`;
+      return `${Math.floor(mo / 12)}y ago`;
+    }
+
+    loadRepos();
+  </script>
+</body>
+</html>
