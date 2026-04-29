@@ -213,6 +213,15 @@ section p {
   gap: 0.3rem;
 }
 
+span.repo-topic {
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-light);
+  border-radius: 99px;
+  padding: 0.15rem 0.55rem;
+}
+
 a.repo-site {
   font-size: 0.75rem;
   color: var(--accent);

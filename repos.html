@@ -33,7 +33,7 @@
       try {
         const res = await fetch(
           'https://api.github.com/users/elliott30/repos?sort=updated&per_page=100',
-          { headers: { Accept: 'application/vnd.github+json' } }
+          { headers: { Accept: 'application/vnd.github+json, application/vnd.github.mercy-preview+json' } }
         );
         if (!res.ok) throw new Error(`GitHub API returned ${res.status}`);
         const repos = await res.json();
@@ -78,7 +78,14 @@
           const meta = document.createElement('div');
           meta.className = 'repo-meta';
 
-          if (r.language) {
+          if (r.topics && r.topics.length > 0) {
+            r.topics.forEach(topic => {
+              const t = document.createElement('span');
+              t.className = 'repo-topic';
+              t.textContent = topic;
+              meta.appendChild(t);
+            });
+          } else if (r.language) {
             const lang = document.createElement('span');
             lang.textContent = '● ' + r.language;
             meta.appendChild(lang);
